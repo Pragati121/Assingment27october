@@ -1,9 +1,10 @@
 package stepDefinition;
+import Pages.PageFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.PageFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 
@@ -18,7 +19,7 @@ public class BaseCLass {
             driver = new ChromeDriver();
             driver.navigate().to("https://www.amazon.in/");
             driver.manage().window().maximize();
-            pageFactory = new PageFactory();
+            pageFactory = new PageFactory(driver);
 
         }
         else if (browserName.equalsIgnoreCase("FireFox")) {
@@ -26,8 +27,12 @@ public class BaseCLass {
             driver = new FirefoxDriver();
             driver.navigate().to("https://www.amazon.in/");
             driver.manage().window().maximize();
-            pageFactory = new PageFactory();
+            pageFactory = new PageFactory(driver);
         }
     }
+@AfterClass
+public void close() {
+    driver.quit();
+}
 }
 

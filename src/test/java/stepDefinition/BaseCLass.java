@@ -1,33 +1,32 @@
 package stepDefinition;
-import Pages.PageFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class BaseCLass {
-    static WebDriver driver;
-    public PageFactory pageFactory;
-    @Parameters("browserName")
-    @BeforeClass
-    public void setUpDriver(String browserName) {
-        if (browserName.equalsIgnoreCase("Chrome")) {
-            WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
-            driver.navigate().to("https://www.amazon.in/");
-            driver.manage().window().maximize();
-            pageFactory = new PageFactory(driver);
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Properties;
 
-        }
-        else if (browserName.equalsIgnoreCase("FireFox")) {
-            WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
-            driver.navigate().to("https://www.amazon.in/");
-            driver.manage().window().maximize();
-            pageFactory = new PageFactory(driver);
-        }
+public class BaseCLass
+{
+    WebDriver driver;
+    WebDriverWait wait;
+    public void Setup() throws IOException {
+        FileReader reader = new FileReader("src/test/java/Properties/Resource.Properties");
+        Properties data = new Properties();
+        data.load(reader);
+        ChromeOptions chromeOptions = new ChromeOptions();
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver(chromeOptions);
+        driver.get(data.getProperty("URL"));
+        driver.manage().window().maximize();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    }
+    public void close() {
+        driver.quit();
     }
 }
 
